@@ -1,0 +1,365 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tres vidas, un sueño</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700;800&display=swap">
+<style>
+/* Layout: una sola columna tipo cuaderno; barra de 3 pasos arriba, cada paso es una hoja con bordes gruesos. */
+:root{
+  --bg:#f3f1fb; --paper:#ffffff; --ink:#1f1b3d; --muted:#625d86; --line:#1f1b3d;
+  --coral:#ff6b4a; --teal:#17a29c; --sun:#ffc93c; --soft:#e6e2f7;
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --body:'Nunito',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15122c; --paper:#211d42; --ink:#f3f0ff; --muted:#aaa5d0; --line:#f3f0ff;
+  --coral:#ff7e61; --teal:#35c4bd; --sun:#ffd25a; --soft:#2f2a5a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15122c; --paper:#211d42; --ink:#f3f0ff; --muted:#aaa5d0; --line:#f3f0ff;
+  --coral:#ff7e61; --teal:#35c4bd; --sun:#ffd25a; --soft:#2f2a5a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.5;
+  padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(2rem,7vw,3rem);font-weight:800}
+h2{font-size:1.7rem;font-weight:800}
+h3{font-size:1.2rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.steps{display:flex;gap:8px;list-style:none;margin:0;padding:0}
+.steps li{flex:1;min-width:0;border:3px solid var(--line);border-radius:14px;padding:8px 6px;text-align:center;font-family:var(--display);font-weight:600;font-size:.95rem;background:var(--paper);color:var(--muted)}
+.steps li.on{background:var(--sun);color:#1f1b3d}
+.steps li.done{background:var(--teal);color:#0d2c2a}
+.sheet{background:var(--paper);border:3px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:16px;box-shadow:6px 6px 0 var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:6px;font-weight:800;min-width:0}
+label small{font-weight:400;color:var(--muted)}
+input[type=text],textarea{font:inherit;color:var(--ink);background:var(--bg);border:3px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+textarea{min-height:84px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:4px solid var(--coral);outline-offset:2px}
+button{font:inherit;font-family:var(--display);font-weight:800;color:#1f1b3d;background:var(--sun);border:3px solid var(--line);border-radius:14px;padding:10px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--line)}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+button.alt{background:var(--soft);color:var(--ink)}
+button.go{background:var(--coral);color:#1f1b3d}
+button[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.pick button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--bg);color:var(--ink);padding:12px}
+.pick button small{font-family:var(--body);font-weight:400;color:var(--muted)}
+.pick button[aria-pressed=true]{background:var(--teal);color:#0d2c2a}
+.pick button[aria-pressed=true] small{color:#0d2c2a}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{background:var(--bg);color:var(--ink);font-family:var(--body);font-weight:700;box-shadow:none;padding:8px 14px}
+.chips button[aria-pressed=true]{background:var(--coral);color:#1f1b3d}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sw{width:36px;height:36px;border-radius:50%;border:3px solid var(--line);padding:0;box-shadow:none}
+.sw[aria-pressed=true]{outline:4px solid var(--coral);outline-offset:2px}
+.tools .sz{padding:6px 12px;box-shadow:none;background:var(--bg);color:var(--ink)}
+.tools .sz[aria-pressed=true]{background:var(--sun);color:#1f1b3d}
+canvas{display:block;width:100%;height:auto;background:#fffdf6;border:3px solid var(--line);border-radius:14px;touch-action:none;cursor:crosshair}
+.part{position:relative}
+.part canvas{border-radius:10px}
+.part+.part{margin-top:-3px}
+.fold{position:absolute;left:0;right:0;top:0;bottom:16px;background:repeating-linear-gradient(135deg,var(--soft) 0 12px,var(--paper) 12px 24px);border:3px solid var(--line);border-bottom:0;border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:600;color:var(--muted)}
+.fold.wait{bottom:0;border-bottom:3px solid var(--line);border-radius:10px}
+.fold span{background:var(--paper);padding:2px 12px;border-radius:99px;border:2px solid var(--line)}
+.who{display:flex;flex-direction:column;gap:2px;background:var(--bg);border:3px dashed var(--line);border-radius:14px;padding:10px 14px}
+.who b{font-family:var(--display);font-size:1.15rem}
+.card{border:3px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:6px}
+.card dt{font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.card dd{margin:0 0 6px}
+.law{display:inline-block;background:var(--sun);color:#1f1b3d;border:2px solid var(--line);border-radius:99px;padding:2px 12px;margin:2px 4px 2px 0;font-weight:700;font-size:.95rem}
+details summary{cursor:pointer;font-family:var(--display);font-weight:600}
+.hint{font-size:.95rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:in .25s ease-out}@keyframes in{from{transform:translateY(8px);opacity:.4}}}
+</style>
+
+<main>
+  <header>
+    <h1>Tres vidas, un sueño</h1>
+    <p class="muted">Una sola aventura para conocer a tres personas de la exposición.</p>
+  </header>
+
+  <ol class="steps" id="steps" aria-label="Pasos">
+    <li>1. Hoja de vida</li><li>2. Mi sueño</li><li>3. Cadáver exquisito</li>
+  </ol>
+
+  <!-- 0: preparación para el adulto -->
+  <section class="sheet" id="s0">
+    <h2>Antes de empezar</h2>
+    <p class="muted">Para el adulto: escribe el nombre de las tres personas de la exposición y una frase que las describa. Lo que ves abajo son ejemplos para reemplazar.</p>
+    <div class="grid" id="peopleForm"></div>
+    <label>Las leyes de un sueño <small>Una por línea. Cambia estas por las de la exposición.</small>
+      <textarea id="lawsText" rows="6"></textarea>
+    </label>
+    <div class="row"><button class="go" id="start">Empezar el juego</button></div>
+  </section>
+
+  <!-- 1: hoja de vida -->
+  <section class="sheet" id="s1" hidden>
+    <h2>Construye la hoja de vida</h2>
+    <p>Elige a la persona que más te llamó la atención.</p>
+    <div class="pick" id="pickPerson"></div>
+    <div class="grid">
+      <label>Nombre <input type="text" id="f_nombre"></label>
+      <label>Dónde vivió <input type="text" id="f_lugar" placeholder="Una ciudad, un barrio, una casa..."></label>
+      <label>A qué se dedicaba <input type="text" id="f_oficio" placeholder="Su trabajo o lo que hacía cada día"></label>
+      <label>Lo que más quería <input type="text" id="f_quiere" placeholder="Una persona, un lugar, una cosa..."></label>
+      <label>Un objeto que lo acompañaba <input type="text" id="f_objeto" placeholder="Algo que usaba siempre"></label>
+      <label>Un sueño que tenía <input type="text" id="f_sueno" placeholder="Algo que quería lograr"></label>
+    </div>
+    <p class="hint">Si no sabes algo, inventa con cariño lo que crees que pudo ser.</p>
+    <div class="row"><button class="go" id="to2">Seguir al sueño</button></div>
+  </section>
+
+  <!-- 2: recrea algo con leyes de un sueño -->
+  <section class="sheet" id="s2" hidden>
+    <h2>Recrea algo de la exposición como en un sueño</h2>
+    <label>¿Qué viste en la exposición que quieres recrear?
+      <input type="text" id="f_cosa" placeholder="Un objeto, una foto, un lugar...">
+    </label>
+    <div>
+      <h3>Escoge dos leyes del sueño</h3>
+      <div class="chips" id="lawChips" style="margin-top:8px"></div>
+      <p class="hint" id="lawCount" style="margin-top:6px">Elegidas: 0 de 2</p>
+    </div>
+    <h3>Dibuja cómo se vería en tu sueño</h3>
+    <div class="tools" id="tools2"></div>
+    <canvas id="cv2" width="720" height="440" aria-label="Lienzo de dibujo"></canvas>
+    <label>Cuéntalo en una frase <small>Empieza con: "En mi sueño..."</small>
+      <textarea id="f_frase"></textarea>
+    </label>
+    <div class="row"><button class="alt" id="back1">Volver</button><button class="go" id="to3">Seguir al cadáver exquisito</button></div>
+  </section>
+
+  <!-- 3: cadáver exquisito -->
+  <section class="sheet" id="s3" hidden>
+    <h2>Cadáver exquisito</h2>
+    <p>Van a dibujar un personaje nuevo en tres partes, como una hoja doblada. Cada parte es de una persona distinta de la exposición. Cuando dibujes una parte, la tapamos para que la siguiente sea una sorpresa.</p>
+    <div class="who" id="who"></div>
+    <div class="tools" id="tools3"></div>
+    <div id="parts"></div>
+    <div class="row">
+      <button id="clearPart" class="alt">Borrar esta parte</button>
+      <button id="nextPart" class="go">Doblar y seguir</button>
+    </div>
+  </section>
+
+  <!-- 4: final -->
+  <section class="sheet" id="s4" hidden>
+    <h2>¡Desdoblamos la hoja!</h2>
+    <canvas id="cvFinal" width="720" height="560" aria-label="Personaje final"></canvas>
+    <label>Ponle un nombre a este personaje
+      <input type="text" id="f_nuevo" placeholder="Por ejemplo: la mezcla de las tres historias">
+    </label>
+    <div class="card" id="summary"></div>
+    <div class="row"><button class="alt" id="again">Jugar otra vez</button></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var S={
+    people:[{n:'Persona 1',t:''},{n:'Persona 2',t:''},{n:'Persona 3',t:''}],
+    laws:['Todo puede flotar','Lo pequeño se vuelve enorme','Los objetos hablan','El tiempo se mezcla','Nada sorprende, aunque sea muy raro'],
+    chosen:-1, picked:[], part:0, color:'#1f1b3d', size:6
+  };
+  var COLORS=['#1f1b3d','#ff6b4a','#ffc93c','#17a29c','#4b7bec','#9b5de5','#8d5a3b','#ffffff'];
+  var SIZES=[['Fino',3],['Medio',7],['Grueso',16]];
+  var PARTS=['La cabeza','El tronco','Las piernas'];
+  var secs=['s0','s1','s2','s3','s4'];
+
+  function show(i){
+    secs.forEach(function(id,k){$(id).hidden=(k!==i)});
+    var li=$('steps').children;
+    for(var k=0;k<li.length;k++){
+      li[k].className = (k+1===i)?'on':(k+1<i?'done':'');
+    }
+    window.scrollTo(0,0);
+  }
+  function pname(i){return (S.people[i].n||'Persona '+(i+1)).trim()}
+
+  /* ---- preparación ---- */
+  function buildSetup(){
+    var f=$('peopleForm'); f.innerHTML='';
+    S.people.forEach(function(p,i){
+      var d=document.createElement('div'); d.className='card';
+      d.innerHTML='<h3>Historia '+(i+1)+'</h3>'+
+        '<label>Nombre<input type="text" id="pn'+i+'" value="'+p.n+'"></label>'+
+        '<label>Una frase que la describe<input type="text" id="pt'+i+'" placeholder="Ej.: siempre llevaba un sombrero rojo"></label>';
+      f.appendChild(d);
+    });
+    $('lawsText').value=S.laws.join('\n');
+  }
+  $('start').onclick=function(){
+    for(var i=0;i<3;i++){S.people[i].n=$('pn'+i).value.trim()||('Persona '+(i+1)); S.people[i].t=$('pt'+i).value.trim();}
+    var l=$('lawsText').value.split('\n').map(function(x){return x.trim()}).filter(Boolean);
+    if(l.length>=2) S.laws=l;
+    buildPick(); buildLaws(); show(1);
+  };
+
+  /* ---- paso 1 ---- */
+  function buildPick(){
+    var box=$('pickPerson'); box.innerHTML='';
+    S.people.forEach(function(p,i){
+      var b=document.createElement('button');
+      b.setAttribute('aria-pressed','false');
+      b.innerHTML=pname(i)+'<small>'+(p.t||'Toca para elegir')+'</small>';
+      b.onclick=function(){
+        S.chosen=i;
+        Array.prototype.forEach.call(box.children,function(c,k){c.setAttribute('aria-pressed',k===i)});
+        $('f_nombre').value=pname(i);
+      };
+      box.appendChild(b);
+    });
+  }
+  $('to2').onclick=function(){
+    if(S.chosen<0){alert_('Primero elige a una persona.',$('pickPerson'));return}
+    show(2);
+  };
+  function alert_(msg,el){
+    var m=document.createElement('p'); m.className='hint'; m.style.color='var(--coral)'; m.style.fontWeight='800'; m.textContent=msg;
+    el.parentNode.insertBefore(m,el.nextSibling); setTimeout(function(){m.remove()},3500);
+  }
+
+  /* ---- paso 2 ---- */
+  function buildLaws(){
+    var box=$('lawChips'); box.innerHTML=''; S.picked=[];
+    S.laws.forEach(function(t,i){
+      var b=document.createElement('button'); b.textContent=t; b.setAttribute('aria-pressed','false');
+      b.onclick=function(){
+        var k=S.picked.indexOf(t);
+        if(k>=0){S.picked.splice(k,1)} else if(S.picked.length<2){S.picked.push(t)} else return;
+        Array.prototype.forEach.call(box.children,function(c){c.setAttribute('aria-pressed',S.picked.indexOf(c.textContent)>=0)});
+        $('lawCount').textContent='Elegidas: '+S.picked.length+' de 2';
+      };
+      box.appendChild(b);
+    });
+  }
+  $('back1').onclick=function(){show(1)};
+  $('to3').onclick=function(){
+    if(!$('f_cosa').value.trim()){alert_('Escribe qué quieres recrear.',$('f_cosa'));return}
+    if(S.picked.length<2){alert_('Escoge dos leyes del sueño.',$('lawChips'));return}
+    startExquisite(); show(3);
+  };
+
+  /* ---- dibujo ---- */
+  function attach(cv){
+    var ctx=cv.getContext('2d'); ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.fillStyle='#fffdf6'; ctx.fillRect(0,0,cv.width,cv.height);
+    var down=false,lx=0,ly=0;
+    function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+    cv.addEventListener('pointerdown',function(e){
+      if(cv.dataset.locked==='1')return;
+      down=true; cv.setPointerCapture(e.pointerId);
+      var p=pt(e); lx=p[0]; ly=p[1];
+      ctx.fillStyle=S.color; ctx.beginPath(); ctx.arc(lx,ly,S.size/2,0,7); ctx.fill();
+    });
+    cv.addEventListener('pointermove',function(e){
+      if(!down)return; var p=pt(e);
+      ctx.strokeStyle=S.color; ctx.lineWidth=S.size; ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p[0],p[1]); ctx.stroke();
+      lx=p[0]; ly=p[1];
+    });
+    function up(){down=false}
+    cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
+  }
+  function clearCv(cv){var c=cv.getContext('2d');c.fillStyle='#fffdf6';c.fillRect(0,0,cv.width,cv.height)}
+  function toolbar(box,onClear){
+    box.innerHTML='';
+    COLORS.forEach(function(c){
+      var b=document.createElement('button'); b.className='sw'; b.style.background=c; b.setAttribute('aria-label','Color '+c);
+      b.setAttribute('aria-pressed',c===S.color);
+      b.onclick=function(){S.color=c;syncTools()};
+      box.appendChild(b);
+    });
+    SIZES.forEach(function(s){
+      var b=document.createElement('button'); b.className='sz'; b.textContent=s[0]; b.dataset.s=s[1];
+      b.setAttribute('aria-pressed',s[1]===S.size);
+      b.onclick=function(){S.size=s[1];syncTools()};
+      box.appendChild(b);
+    });
+    if(onClear){
+      var x=document.createElement('button'); x.className='sz'; x.textContent='Borrar todo'; x.onclick=onClear; box.appendChild(x);
+    }
+  }
+  function syncTools(){
+    ['tools2','tools3'].forEach(function(id){
+      Array.prototype.forEach.call($(id).children,function(b){
+        if(b.classList.contains('sw')) b.setAttribute('aria-pressed',b.style.background.replace(/\s/g,'')===hexToRgb(S.color));
+        else if(b.dataset.s) b.setAttribute('aria-pressed',+b.dataset.s===S.size);
+      });
+    });
+  }
+  function hexToRgb(h){var n=parseInt(h.slice(1),16);return 'rgb('+(n>>16)+','+((n>>8)&255)+','+(n&255)+')'}
+
+  var cv2=$('cv2'); attach(cv2);
+  toolbar($('tools2'),function(){clearCv(cv2)});
+
+  /* ---- paso 3: cadáver exquisito ---- */
+  var partCv=[];
+  function startExquisite(){
+    S.part=0; partCv=[];
+    var box=$('parts'); box.innerHTML='';
+    PARTS.forEach(function(nm,i){
+      var w=document.createElement('div'); w.className='part';
+      var c=document.createElement('canvas'); c.width=720; c.height=200; c.setAttribute('aria-label',nm);
+      var f=document.createElement('div'); f.className='fold wait'; f.innerHTML='<span>'+nm+' (todavía no)</span>';
+      w.appendChild(c); w.appendChild(f); box.appendChild(w);
+      attach(c); c.dataset.locked='1'; partCv.push({c:c,f:f});
+    });
+    toolbar($('tools3'));
+    activate();
+  }
+  function activate(){
+    var i=S.part;
+    partCv.forEach(function(p,k){
+      if(k<i){p.f.className='fold'; p.f.innerHTML='<span>Doblado</span>'; p.c.dataset.locked='1'}
+      else if(k===i){p.f.style.display='none'; p.c.dataset.locked='0'}
+      else {p.f.className='fold wait'; p.f.style.display=''; p.f.innerHTML='<span>'+PARTS[k]+' (todavía no)</span>'; p.c.dataset.locked='1'}
+    });
+    var p=S.people[i];
+    $('who').innerHTML='<b>'+PARTS[i]+' de '+pname(i)+'</b><span>'+(p.t?('Recuerda: '+p.t+'.'):'Dibújala como tú imaginas que era.')+'</span>';
+    $('nextPart').textContent = i<2 ? 'Doblar y seguir' : 'Desdoblar la hoja';
+    syncTools();
+  }
+  $('clearPart').onclick=function(){clearCv(partCv[S.part].c)};
+  $('nextPart').onclick=function(){
+    if(S.part<2){S.part++; activate()} else {finish(); show(4)}
+  };
+
+  /* ---- final ---- */
+  function finish(){
+    var f=$('cvFinal'), ctx=f.getContext('2d');
+    ctx.fillStyle='#fffdf6'; ctx.fillRect(0,0,f.width,f.height);
+    var h=f.height/3;
+    partCv.forEach(function(p,i){ctx.drawImage(p.c,0,i*h,f.width,h)});
+    ctx.strokeStyle='#1f1b3d'; ctx.lineWidth=2; ctx.setLineDash([10,8]);
+    for(var i=1;i<3;i++){ctx.beginPath();ctx.moveTo(0,i*h);ctx.lineTo(f.width,i*h);ctx.stroke()}
+    ctx.setLineDash([]);
+    renderSummary();
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function renderSummary(){
+    var v=function(id){return esc($(id).value.trim()||'—')};
+    var nuevo=$('f_nuevo').value.trim();
+    var laws=S.picked.map(function(l){return '<span class="law">'+esc(l)+'</span>'}).join('');
+    $('summary').innerHTML=
+      '<h3>Lo que descubriste</h3><dl style="margin:0">'+
+      '<dt>Hoja de vida de '+esc(pname(S.chosen))+'</dt>'+
+      '<dd>Vivió en '+v('f_lugar')+'. Se dedicaba a '+v('f_oficio')+'. Quería mucho '+v('f_quiere')+'. Lo acompañaba '+v('f_objeto')+'. Soñaba con '+v('f_sueno')+'.</dd>'+
+      '<dt>Recreé en un sueño</dt><dd>'+v('f_cosa')+' con estas leyes: '+laws+'<br>'+v('f_frase')+'</dd>'+
+      '<dt>Personaje nuevo'+(nuevo?': '+esc(nuevo):'')+'</dt>'+
+      '<dd>Tiene la cabeza de '+esc(pname(0))+', el tronco de '+esc(pname(1))+' y las piernas de '+esc(pname(2))+'. Las tres historias ahora caminan juntas.</dd></dl>';
+  }
+  $('f_nuevo').addEventListener('input',renderSummary);
+  $('again').onclick=function(){
+    ['f_nombre','f_lugar','f_oficio','f_quiere','f_objeto','f_sueno','f_cosa','f_frase','f_nuevo'].forEach(function(id){$(id).value=''});
+    S.chosen=-1; clearCv(cv2); buildPick(); buildLaws(); show(1);
+  };
+
+  buildSetup(); show(0);
+})();
+</script>
+
+</body></html>
